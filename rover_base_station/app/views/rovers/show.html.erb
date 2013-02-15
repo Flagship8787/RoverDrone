@@ -1,0 +1,21 @@
+<%= render :partial => "rovers/show/assets/styles" %>
+<%= render :partial => "rovers/show/assets/scripts" %>
+<style type="text/css">
+	.float_left{
+		float:left;
+	}
+	.float_right{
+		float:right;
+	}
+	.clear_both{
+		clear:both;
+	}
+</style>
+<div id="show_rover_wrap">
+	<div id="show_rover_map" class="float_left">
+		<div id="rover_map" style="width: 650px ; height: 500px">
+		</div>
+	</div>
+	<%= render :partial => "rovers/show/partials/show" %>
+	<br class="clear_both" />
+</div>

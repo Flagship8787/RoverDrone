@@ -1,0 +1,4 @@
+source 'https://rubygems.org'
+
+# Specify your gem's dependencies in rover_base_station.gemspec
+gemspec

@@ -1,0 +1,54 @@
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzBjVk8uRIuK4VZaa0XI1pjnNeqNBjeeo&sensor=false">
+</script>
+<script type="text/javascript">
+
+    var latitude;
+    var longitude;
+
+    var mapOptions;
+
+    var map;
+    var marker;
+
+	$(document).ready(function(){
+        latitude = $("#latitude").attr("value");
+        longitude = $("#longitude").attr("value");
+
+        mapOptions = {
+            center: new google.maps.LatLng(latitude, longitude),
+            zoom: 8,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById("rover_map"),
+            mapOptions);
+
+        marker = new google.maps.Marker({position: new google.maps.LatLng(latitude, longitude), map: map, title:"Hello World!"});
+	});
+
+    setInterval(function(){
+        $.ajaxSetup(
+        {
+            cache: false,
+            complete: function() {
+                $('#loading').hide();
+                $('#updatingdiv').show();
+            },
+            success: function() {
+                $('#loading').hide();
+                $('#updatingdiv').show();
+            }
+        });
+
+        $("#show_rover_info").load("<%= url_for :controller => "rovers", :action => "show", :id => @rover.id.to_s %>", null, function(responseText, textStatus, XMLHttpRequest){
+            
+            latitude = $("#latitude").attr("value");
+            longitude = $("#longitude").attr("value");
+
+            marker.setPosition(new google.maps.LatLng(latitude, longitude));
+        });
+
+    }, 5000);
+</script>
+

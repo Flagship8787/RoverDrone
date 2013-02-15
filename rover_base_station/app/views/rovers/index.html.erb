@@ -1,0 +1,17 @@
+<h3>There are <%= @rovers.length.to_s %> Rover(s)</h3>
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Options</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @rovers.each do |rover| %>
+			<tr>
+				<td><%= rover.Name %></td>
+				<td><%= link_to rover, "View" %></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

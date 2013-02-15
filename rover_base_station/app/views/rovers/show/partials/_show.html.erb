@@ -1,0 +1,58 @@
+<div id="show_rover_info" class="float_right">
+	<%
+    	lat = @rover.GPS["Latitude"]
+
+    	dotInd = lat.index(".")
+    	latDegs = lat[0..(dotInd - 3)].to_f
+    	latTime = lat[(dotInd - 2)..(lat.length - 1)].to_f
+    	latDegs += (latTime / 60.0)
+
+    	lng = @rover.GPS["Longitude"]
+    	
+    	dotInd = lng.index(".")
+    	lngDegs = lng[0..(dotInd - 3)].to_f
+    	lngTime = lng[(dotInd - 2)..(lng.length - 1)].to_f
+    	lngDegs += (lngTime / 60.0)
+
+    	lngDegs *= -1
+    %>
+	
+	<input type="hidden" id="latitude" value="<%= latDegs %>" />
+	<input type="hidden" id="longitude" value="<%= lngDegs %>" />
+
+	<h3><%= @rover.Name %></h3>
+	<label>Last Refreshed:</label>
+	<span id="last_refreshed"><%= Time.now.to_s %></span>
+	<hr />
+	<div id="rover_telemetry_wrap">
+		<span>
+			<label class="float_left">Telemetry Received:</label>
+			<span class="float_right"><%= (@rover.TelemetryRcvd.nil? ? "NEVER" : @rover.TelemetryRcvd.to_s) %></span>
+			<br class="clear_both" />
+		</span>
+		<span>
+			<label class="float_left">Rover Uptime:</label>
+			<span class="float_right"><%= (@rover.Millis.nil? ? "NONE" : @rover.Millis.to_s + " ms") %></span>
+			<br class="clear_both" />
+		</span>
+		<span>
+			<label class="float_left">Clearance:</label>
+			<span class="float_right"><%= (@rover.Clearance.nil? ? "NONE" : @rover.Clearance.to_s) + "cm" %></span>
+			<br class="clear_both" />
+		</span>
+		<hr />
+		<label>GPS Data</label>
+		<% if @rover.GPS.nil? %>
+			<label>NONE</label>
+		<% else %>
+			<ul>
+				<% @rover.GPS.each_pair do |key, val| %>
+					<li>
+						<label><%= key %></label>
+						<span><%= val %></span>
+					</li>
+				<% end %>
+			</ul>
+		<% end %>
+	</div>
+</div>
