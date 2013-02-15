@@ -4,6 +4,7 @@
 #include "Arduino.h"
 
 #include <WProgram.h>
+//#include <RoverCamera.h>
 
 #define kPingPin 7
 #define kMinClearance 3
@@ -19,8 +20,13 @@
 
 #define kCmdBufferCapacity 15
 
+//	Commands from the controller
 #define kStopCommand "$STOP"
 #define kStopCommandLength 5
+
+#define kImageCommand "$IMG"
+#define kImageCommandLength 4
+
 #define kCommandMaxDowtime 1500
 #define kMinMotorPower 50
 
@@ -34,23 +40,30 @@ class RoverDriver
 		long currentClearance;
 
 	private:
-		void fullStop();
-		
 		//	Ping stuff
 		unsigned long lastPing;
 		long distanceInFront();
 
-		//	Motor Stuff
+		//	Controller Command Stuff
 		unsigned long lastCommand;
 
 		char cmdBuffer[kCmdBufferCapacity];
 		int cmdBufferLength;
 
 		void flushCmdBuffer();
+		
 		void receiveCommands();
 		void parseCommand();
+		
 		boolean receivedStopCommand();
+		boolean receivedImageCommand();
+		
+		//	Driving
 		void performDriveCommand(int, int);
+		void fullStop();
+		
+		//	Images
+		boolean takingPicture;
 };
 
 #endif

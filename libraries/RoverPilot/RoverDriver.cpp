@@ -24,10 +24,24 @@ RoverDriver::RoverDriver()
 	flushCmdBuffer();
 
 	lastCommand = 0;
+
+	/*
+	//	Picture stuff
+	takingPicture = false;
+	*/
 }
 
+/*****
+ *	Ping'ing
+ *****/
 void RoverDriver::drive()
 {
+	/*
+	if(takingPicture){
+		return;
+	}
+	*/
+
 	//	Check if we're gonna hit something
 	unsigned long currentTime = millis();
 	if(currentTime - lastPing > kPingInterval){
@@ -45,12 +59,9 @@ void RoverDriver::drive()
 	}
 }
 
-void RoverDriver::fullStop()
-{
-	digitalWrite(kFrBrakePin, HIGH);
-	digitalWrite(kBkBrakePin, HIGH);
-}
-
+/*****
+ *	Ping'ing
+ *****/
 long RoverDriver::distanceInFront()
 {
 	long duration, cm;
@@ -79,6 +90,9 @@ long RoverDriver::distanceInFront()
  	return cm;
 }
 
+/*****
+ *	Command Handling
+ *****/
 void RoverDriver::flushCmdBuffer()
 {
 	for (int i=0;i<kCmdBufferCapacity;i++){
@@ -111,8 +125,6 @@ void RoverDriver::receiveCommands()
 		flushCmdBuffer();
 	}
 
-	//Serial.write(cmdByte);
-
 	//	Now just buffer the new byte
 	cmdBuffer[cmdBufferLength] = cmdByte;
 	cmdBufferLength++;
@@ -120,12 +132,28 @@ void RoverDriver::receiveCommands()
 
 void RoverDriver::parseCommand()
 {
-
 	//	Check for stop command
 	if(receivedStopCommand()){
 		fullStop();
 		return;
 	}
+	
+	/*
+	//	Check for image command
+	if(receivedImageCommand()){
+		RoverCamera camera = RoverCamera();
+		camera.takePicture();
+		
+		//	Wait for the camera to finish taking picture
+		while(camera.takingPicture){
+			camera.takePicture();
+		}
+		
+		Serial.flush();
+		
+		return;
+	}
+	*/
 
 	//	Find the seperator
 	int seperatorInd = 0;
@@ -175,6 +203,24 @@ boolean RoverDriver::receivedStopCommand()
 	return true;
 }
 
+boolean RoverDriver::receivedImageCommand()
+{
+	if(cmdBufferLength < kImageCommandLength){
+		return false;
+	}
+
+	for(int i = 0 ; i < kImageCommandLength ; i++){
+		if(cmdBuffer[i] != kImageCommand[i]){
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/*****
+ *	Driving
+ *****/
 void RoverDriver::performDriveCommand(int LR, int FB)
 {
 	boolean isLeft;
@@ -222,3 +268,10 @@ void RoverDriver::performDriveCommand(int LR, int FB)
 		digitalWrite(kBkBrakePin, HIGH);
 	}
 }
+
+void RoverDriver::fullStop()
+{
+	digitalWrite(kFrBrakePin, HIGH);
+	digitalWrite(kBkBrakePin, HIGH);
+}
+

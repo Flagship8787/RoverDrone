@@ -3,15 +3,14 @@
 
 #include "Arduino.h"
 
-#include <SD.h>
+//#include <SD.h>
 
 #include <SPI.h>
 #include <Ethernet.h>
 
-#define kIsDebugging false
-
 #define kAppPort 3000
-#define kRoverIdFile "rover.id"
+
+#define kIsDebugging false
 
 typedef enum{
 	RCNetworkDisconnected,
@@ -24,7 +23,9 @@ class RoverControlClient
   		static RoverControlClient* SharedInstance();
 
 		void connectToNetwork();
+		
 		void reportTelemetryToServer(char[300],int);
+		//void reportImageDataToServer();
 
 	private:
 		RoverControlClient();
@@ -34,7 +35,6 @@ class RoverControlClient
 
 		IPAddress server;
 		EthernetClient client;
-
 };
 
 #endif

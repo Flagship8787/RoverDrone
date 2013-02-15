@@ -3,13 +3,28 @@
 
 #include "Arduino.h"
 
+//#include <SD.h>
+
+#include <SPI.h>
+#include <Ethernet.h>
+
 #include <SoftwareSerial.h>
 
 #include <RoverMonitor.h>
 #include <RoverControlClient.h>
 
-#define kXBeeRx 6
-#define kXBeeTx 7
+#define kXBeeRx 4
+#define kXBeeTx 5
+
+#define kImageCommand "$IMG@"
+
+#define kImageEnding "@@@@@"
+#define kImageEndingLength 5
+
+#define kButtonPin 6
+#define kLedPin 7
+
+#define kImageRequestTimeout 6000
 
 #define kCommandInterval (1000 / 12)
 
@@ -34,8 +49,24 @@ class RoverController
 
 		void flushBuffer();
 		void monitorRover();
+		
+		//	Getting images from the rover
+		/*
+		boolean buttonPressed;
+		boolean waitingForImage;
+		
+		unsigned long imageRequestTime;
+		unsigned long imageDataReceived;
 
-		//	Sending commands from the controller
+		int imgEndingChars;
+		
+		File imageFile;
+		
+		void requestImageFromRover();
+		void receiveImageFromRover();
+		*/
+
+		//	Sending commands from the joystick
 		unsigned int LR;
 		unsigned int UD;
 
